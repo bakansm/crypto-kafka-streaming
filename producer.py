@@ -28,7 +28,6 @@ async def async_getCryptoRealTimeData(producer, topic, crypto, time_inverval):
             # produce record to kafka
             produceRecord(new_data, producer, topic)
             print('Record: {}'.format(new_data))
-            print('======================================')
         else:
             # debug / print message
             print('Failed API request at time {0}'.format(dt.datetime.utcnow()))
@@ -49,8 +48,7 @@ async def main():
     async_getCryptoRealTimeData(producer, config['topic_5'], params['currency_5'], params['api_call_period']),
     async_getCryptoRealTimeData(producer, config['topic_6'], params['currency_6'], params['api_call_period']),
     async_getCryptoRealTimeData(producer, config['topic_7'], params['currency_7'], params['api_call_period'])
-
-
 )
+
 # run async routine
 asyncio.run(main())

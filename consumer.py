@@ -30,24 +30,24 @@ while True:
         produceRecord(ma_1, producer, config['topic_4'])
         print('Produce record to topic \'{0}\' at time {1}'.format(config['topic_4'], dt.datetime.utcnow()))
 
-    # topic 2 --> 5
-    records_2 = consumeRecord(consumer_2)
-    print('Consume records from topic \'{0}\' at time {1}'.format(config['topic_2'], dt.datetime.utcnow()))
-    for r in records_2:
-        dt_obj = dt.datetime.fromtimestamp(r['timestamp'])
-        data_2.loc[len(data_2)] = [int(dt_obj.timestamp()), float(r['amount'])]
-        ma_2 = {'timestamp': r['timestamp'], 'amount': float(data_2['value'].tail(n=params['ma']).mean())}
-        # produce data
-        produceRecord(ma_2, producer, config['topic_5'])
-        print('Produce record to topic \'{0}\' at time {1}'.format(config['topic_5'], dt.datetime.utcnow()))
+    # # topic 2 --> 5
+    # records_2 = consumeRecord(consumer_2)
+    # print('Consume records from topic \'{0}\' at time {1}'.format(config['topic_2'], dt.datetime.utcnow()))
+    # for r in records_2:
+    #     dt_obj = dt.datetime.fromtimestamp(r['timestamp'])
+    #     data_2.loc[len(data_2)] = [int(dt_obj.timestamp()), float(r['amount'])]
+    #     ma_2 = {'timestamp': r['timestamp'], 'amount': float(data_2['value'].tail(n=params['ma']).mean())}
+    #     # produce data
+    #     produceRecord(ma_2, producer, config['topic_5'])
+    #     print('Produce record to topic \'{0}\' at time {1}'.format(config['topic_5'], dt.datetime.utcnow()))
 
-    # topic 3 --> 6
-    records_3 = consumeRecord(consumer_3)
-    print('Consume records from topic \'{0}\' at time {1}'.format(config['topic_3'], dt.datetime.utcnow()))
-    for r in records_3:
-        dt_obj = dt.datetime.fromtimestamp(r['timestamp'])
-        data_3.loc[len(data_3)] = [int(dt_obj.timestamp()), float(r['amount'])]
-        ma_3 = {'timestamp': r['timestamp'], 'amount': float(data_3['value'].tail(n=params['ma']).mean())}
-        # produce data
-        produceRecord(ma_3, producer, config['topic_6'])
-        print('Produce record to topic \'{0}\' at time {1}'.format(config['topic_6'], dt.datetime.utcnow()))
+    # # topic 3 --> 6
+    # records_3 = consumeRecord(consumer_3)
+    # print('Consume records from topic \'{0}\' at time {1}'.format(config['topic_3'], dt.datetime.utcnow()))
+    # for r in records_3:
+    #     dt_obj = dt.datetime.fromtimestamp(r['timestamp'])
+    #     data_3.loc[len(data_3)] = [int(dt_obj.timestamp()), float(r['amount'])]
+    #     ma_3 = {'timestamp': r['timestamp'], 'amount': float(data_3['value'].tail(n=params['ma']).mean())}
+    #     # produce data
+    #     produceRecord(ma_3, producer, config['topic_6'])
+    #     print('Produce record to topic \'{0}\' at time {1}'.format(config['topic_6'], dt.datetime.utcnow()))
