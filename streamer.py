@@ -14,7 +14,7 @@ spark.sparkContext.setLogLevel("ERROR")
 if __name__ == "__main__":
     df = (
         spark.readStream.format("kafka")
-        .option("kafka.bootstrap.servers", "localhost:8083")
+        .option("kafka.bootstrap.servers", "localhost:9092")
         .option("subscribe", config['topic_1'])
         .option("startingOffsets", "earliest")
         .option("endingOffsets", "latest")
