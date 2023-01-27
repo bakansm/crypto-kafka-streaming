@@ -1,0 +1,5 @@
+Bước 1: Mở kafka server và zookeeper server.
+Bước 2: Chạy file producer.py bằng lệnh "python3 producer.py" bằng terminal.
+Bước 3: Chạy file streamer.py bằng lệnh "spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1 streamer.py" bằng terminal.
+
+NOTE: Ấn Ctrl+C ở tất cả các terminal để dừng.
