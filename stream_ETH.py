@@ -6,8 +6,10 @@ from pyspark.sql.functions import col
 from config import config, params
 
 KAFKA_BOOTSTRAP_SERVER = "localhost:9092"
-KAFKA_TOPIC = config["topic_1"]
+INPUT_KAFKA_TOPIC = config["topic_2"]
+OUTPUT_KAFKA_TOPIC = 'result'
 CHECKPOINT_LOCATION = "./kafka-ml-test/checkpoint"
+
 
 ### Khởi tạo spark
 spark = SparkSession \
@@ -30,7 +32,7 @@ jsonData = spark \
   .readStream \
   .format("kafka") \
   .option("kafka.bootstrap.servers", KAFKA_BOOTSTRAP_SERVER) \
-  .option("subscribe", KAFKA_TOPIC) \
+  .option("subscribe", INPUT_KAFKA_TOPIC) \
   .option("startingOffsets", "latest") \
   .option("includeHeaders", "true") \
   .option("failOnDataLoss","false") \
@@ -40,9 +42,6 @@ jsonData = spark \
 dataframe = jsonData.select(from_json(col("value").cast("string"), schema).alias("value"))
 
 
-############################# IMPORTANT #############################
-### ---> Code mô hình máy học ở đây khúc này bằng dataframe  <--- ###
-#####################################################################
 
 
 ### Chuyển dataframe ngược lại json để thêm vào topic
@@ -55,8 +54,8 @@ ds = reward_data \
   .trigger(processingTime="5 seconds") \
   .option("kafka.bootstrap.servers", KAFKA_BOOTSTRAP_SERVER) \
   .option("checkpointLocation", CHECKPOINT_LOCATION) \
-  .outputMode("update") \
-  .option("topic", "result") \
+  .outputMode("append") \
+  .option("topic", OUTPUT_KAFKA_TOPIC) \
   .start()
 
 ds.awaitTermination()
