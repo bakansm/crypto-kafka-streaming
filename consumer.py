@@ -8,14 +8,14 @@ from config import config, params
 # initialize Kafka consumers and producer
 print('Starting Apache Kafka consumers and producer')
 consumer_1 = initConsumer(config['topic_1'])
-consumer_2 = initConsumer(config['topic_2'])
-consumer_3 = initConsumer(config['topic_3'])
+# consumer_2 = initConsumer(config['topic_2'])
+# consumer_3 = initConsumer(config['topic_3'])
 producer = initProducer()
 
 # intialize local dataframe
 data_1 = pd.DataFrame(columns=['time', 'value'])
-data_2 = pd.DataFrame(columns=['time', 'value'])
-data_3 = pd.DataFrame(columns=['time', 'value'])
+# data_2 = pd.DataFrame(columns=['time', 'value'])
+# data_3 = pd.DataFrame(columns=['time', 'value'])
 
 while True:
     # consume data from Kafka

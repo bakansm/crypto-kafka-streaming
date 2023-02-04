@@ -1,7 +1,16 @@
 Bước 1: Chạy kafka server và zookeeper server.
 Bước 2: Submit Topic bằng lệnh "bin/kafka-topics.sh --create --topic result_BTC --bootstrap-server localhost:9092".
-Bước 2: Chạy file streamer_BTC.py bằng lệnh "spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1 stream_BTC.py".
-Bước 3: Chạy file producer.py bằng lệnh "python3 producer.py
-Bước 4: Chạy consumer bằng lệnh "bin/kafka-console-consumer.sh --topic result_BTC --bootstrap-server localhost:9092"
+Bước 3: Chạy file streamer_BTC.py bằng lệnh "spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1 stream_BTC.py".
+Bước 4: Chạy file producer.py bằng lệnh "python3 producer.py
+Bước 5: Chạy consumer bằng lệnh "bin/kafka-console-consumer.sh --topic result_BTC --bootstrap-server localhost:9092"
 
 NOTE: Ấn Ctrl+C ở tất cả các terminal để dừng.
+
+
+
+bin/zookeeper-server-start.sh config/zookeeper.properties
+bin/kafka-server-start.sh config/server.properties
+bin/kafka-topics.sh --create --topic topic_BTC --bootstrap-server localhost:9092
+bin/kafka-console-consumer.sh --topic result --bootstrap-server localhost:9092
+bin/connect-standalone.sh config/connect-standalone.properties config/questdb-connector.properties
+spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1 test.py

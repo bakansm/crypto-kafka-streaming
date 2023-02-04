@@ -1,13 +1,22 @@
+from pyspark.sql import Window
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
 from pyspark.sql import SparkSession
 from config import config, params
-from pyspark.sql.functions import col
-from config import config, params
+from pyspark.ml.feature import StringIndexer
+from pyspark.ml.feature import VectorAssembler
+
 
 KAFKA_BOOTSTRAP_SERVER = "localhost:9092"
-KAFKA_TOPIC = config["topic_1"]
-CHECKPOINT_LOCATION = "./kafka-ml-test/checkpoint"
+KAFKA_TOPIC = "{0},{1},{2},{3},{4},{5},{6}" \
+              .format(config['topic_1'],
+                      config['topic_2'],
+                      config['topic_3'],
+                      config['topic_4'],
+                      config['topic_5'],
+                      config['topic_6'],
+                      config['topic_7'])
+CHECKPOINT_LOCATION = "./checkpoint"
 
 ### Khởi tạo spark
 spark = SparkSession \
@@ -19,9 +28,9 @@ spark = SparkSession \
 
 ### Tạo khung dataframe
 schema = StructType([ 
-  StructField("timestamp", StringType(), True),
+  StructField("timestamp", TimestampType(), True),
   StructField("currency" , StringType(), True),
-  StructField("amount" , StringType(), True),
+  StructField("amount" , FloatType(), True),
 ])
 
 
@@ -31,28 +40,30 @@ jsonData = spark \
   .format("kafka") \
   .option("kafka.bootstrap.servers", KAFKA_BOOTSTRAP_SERVER) \
   .option("subscribe", KAFKA_TOPIC) \
-  .option("startingOffsets", "latest") \
+  .option("startingOffsets", "earliest") \
   .option("includeHeaders", "true") \
   .option("failOnDataLoss","false") \
   .load()
 
 ### Chuyển json sang datafram pyspark
-dataframe = jsonData.select(from_json(col("value").cast("string"), schema).alias("value"))
+dataframe = jsonData.select(from_json(col("value").cast("string"), schema).alias("value")).select(col("value.*"))
 
+# dataframe = dataframe.groupBy('currency').agg(avg('amount').cast('Float').alias('average'), current_timestamp().alias('date'))
 
-############################# IMPORTANT #############################
-### ---> Code mô hình máy học ở đây khúc này bằng dataframe  <--- ###
-#####################################################################
+# dataframe.printSchema()
 
+# ############################# IMPORTANT #############################
+# ### ---> Code mô hình máy học ở đây khúc này bằng dataframe  <--- ###
+# #####################################################################
 
 ### Chuyển dataframe ngược lại json để thêm vào topic
-reward_data = dataframe.select(to_json(struct("value.*")).alias("value"))
+reward_data = dataframe.select(to_json(struct("*")).alias("value"))
 
 ### Thêm data vào lại topic
 ds = reward_data \
   .writeStream \
   .format("kafka") \
-  .trigger(processingTime="5 seconds") \
+  .trigger(processingTime="1 seconds") \
   .option("kafka.bootstrap.servers", KAFKA_BOOTSTRAP_SERVER) \
   .option("checkpointLocation", CHECKPOINT_LOCATION) \
   .outputMode("update") \

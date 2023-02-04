@@ -8,7 +8,7 @@ from config import config, params
 KAFKA_BOOTSTRAP_SERVER = "localhost:9092"
 INPUT_KAFKA_TOPIC = config["topic_1"]
 OUTPUT_KAFKA_TOPIC = 'result_BTC'
-CHECKPOINT_LOCATION = "./kafka-ml-test/checkpoint"
+CHECKPOINT_LOCATION = "./checkpoint"
 
 
 ### Khởi tạo spark
@@ -44,11 +44,15 @@ dataframe = jsonData.select(from_json(col("value").cast("string"), schema).alias
 
 
 
-### Chuyển dataframe ngược lại json để thêm vào topic
-reward_data = dataframe.select(to_json(struct("value.*")).alias("value"))
+############################# IMPORTANT #############################
+### ---> Code mô hình máy học ở đây khúc này bằng dataframe  <--- ###
+#####################################################################
+
+## Chuyển dataframe ngược lại json để thêm vào topic
+forward_data = dataframe.select(to_json(struct("value.*")).alias("value"))
 
 ### Thêm data vào lại topic
-ds = reward_data \
+ds = forward_data \
   .writeStream \
   .format("kafka") \
   .trigger(processingTime="5 seconds") \
