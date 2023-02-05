@@ -20,7 +20,7 @@ async def async_getCryptoRealTimeData(producer, topic, crypto, time_inverval):
             print(raw_data)
             # add schema
             new_data = {
-              "timestamp": int(time.time()),
+              "timestamp": time.time()*1000,
               "currency": raw_data['data']['base'],
               "amount": float(raw_data['data']['amount'])
             }    

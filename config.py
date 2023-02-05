@@ -11,7 +11,7 @@ params = {
   'ref_currency': 'USD',
   'ma': 25,
   # api setup
-  'api_call_period': 5,
+  'api_call_period': 10,
 }
 
 config = {
