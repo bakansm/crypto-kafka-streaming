@@ -4,7 +4,7 @@ params = {
     'windowSize': '1h',
     'type': 'FULL'
   },
-  'api_call_period': 10,
+  'api_call_period': 600,
 }
 
 config = {

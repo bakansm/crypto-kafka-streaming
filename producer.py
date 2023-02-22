@@ -28,7 +28,7 @@ async def async_getCryptoRealTimeData(producer, topic, param, time_inverval):
         volume=[]
         vwap=[]
 
-        for i in range(0,5):
+        for i in range(0,10):
             res = requests.get(uri,params=param)
             if (res.status_code==200):            # read json response
                 # read json response

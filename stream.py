@@ -55,7 +55,7 @@ reward_data = dataframe.select(to_json(struct("*")).alias("value"))
 ds = reward_data \
   .writeStream \
   .format("kafka") \
-  .trigger(processingTime="10 seconds") \
+  .trigger(processingTime="60 seconds") \
   .option("kafka.bootstrap.servers", KAFKA_BOOTSTRAP_SERVER) \
   .option("checkpointLocation", CHECKPOINT_LOCATION) \
   .outputMode("update") \
